@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HuggingFace Models - Enriched</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: monospace;
+            margin: 20px;
+        }
+        input {
+            font-family: monospace;
+            border: 1px solid #000;
+            padding: 4px 8px;
+            width: 300px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 4px 8px;
+            text-align: left;
+        }
+        tr.model-group-start td {
+            border-top: 2px solid #000;
+        }
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        th:hover {
+            background: #e0e0e0;
+        }
+        th::after {
+            content: ' ↕';
+            color: #999;
+            font-size: 0.8em;
+        }
+        th.sort-asc::after {
+            content: ' ↑';
+            color: #333;
+        }
+        th.sort-desc::after {
+            content: ' ↓';
+            color: #333;
+        }
+        tr:hover {
+            background: #f9f9f9;
+        }
+        .hidden {
+            display: none;
+        }
+        .highlighted {
+            background: #fffacd !important;
+        }
+        .best-value {
+            color: #008000;
+            font-weight: bold;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .generation-date {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <input type="search" id="filterInput" placeholder="Filter by model or provider...">
+        <span class="generation-date" id="generationDate"></span>
+    </div>
+    <table id="modelsTable">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Provider</th>
+                <th>Status</th>
+                <th>Uptime %</th>
+                <th>Input $/1M</th>
+                <th>Output $/1M</th>
+                <th>Context</th>
+                <th>Quant</th>
+                <th>Latency (s)</th>
+                <th>Throughput (t/s)</th>
+                <th>Tools</th>
+                <th>Structured</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <tr><td colspan="12">Loading...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        // Get query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const highlightModelId = urlParams.get('model');
+        
+        fetch('enriched_models_enhanced.json')
+            .then(response => response.json())
+            .then(data => {
+                // Display generation date
+                if (data.generated_at) {
+                    const date = new Date(data.generated_at);
+                    const dateStr = date.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        timeZoneName: 'short'
+                    });
+                    document.getElementById('generationDate').textContent = `Last update: ${dateStr}`;
+                }
+                
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = '';
+                let firstHighlightedRow = null;
+                
+                // Handle both old format (direct array) and new format (with metadata)
+                const models = Array.isArray(data) ? data : data.data;
+                models.forEach((model, modelIndex) => {
+                    if (model.providers) {
+                        model.providers.forEach((provider, providerIndex) => {
+                            const row = document.createElement('tr');
+                            
+                            // Add class for first provider of each model to create visual separation
+                            if (providerIndex === 0 && modelIndex > 0) {
+                                row.classList.add('model-group-start');
+                            }
+                            
+                            // Highlight if model matches query parameter
+                            if (highlightModelId && model.id === highlightModelId) {
+                                row.classList.add('highlighted');
+                                if (!firstHighlightedRow) {
+                                    firstHighlightedRow = row;
+                                }
+                            }
+                    
+                    row.innerHTML = `
+                        <td>${model.id}</td>
+                        <td>${provider.provider}</td>
+                        <td>${provider.endpoint_status_name || provider.status || '-'}</td>
+                        <td>${provider.uptime_30d !== undefined ? provider.uptime_30d : '-'}</td>
+                        <td>${provider.pricing?.input !== undefined ? provider.pricing.input : '-'}</td>
+                        <td>${provider.pricing?.output !== undefined ? provider.pricing.output : '-'}</td>
+                        <td>${provider.context_length || '-'}</td>
+                        <td>${provider.quantization || '-'}</td>
+                        <td>${provider.latency_s !== undefined ? provider.latency_s : '-'}</td>
+                        <td>${provider.throughput_tps !== undefined ? provider.throughput_tps : '-'}</td>
+                        <td>${provider.supports_tools ? 'Yes' : 'No'}</td>
+                        <td>${provider.supports_structured_output ? 'Yes' : 'No'}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                        });
+                    }
+                });
+                
+                // Store original data for sorting
+                window.tableData = models;
+                
+                // Function to find and mark best values
+                function markBestValues() {
+                    const rows = Array.from(tbody.getElementsByTagName('tr'));
+                    const highlightedRows = rows.filter(row => row.classList.contains('highlighted'));
+                    
+                    if (highlightedRows.length === 0) return;
+                    
+                    // Define which columns need min vs max for best value
+                    const columnConfig = {
+                        4: 'min', // Input $/1M - lower is better
+                        5: 'min', // Output $/1M - lower is better
+                        6: 'max', // Context - higher is better
+                        8: 'min', // Latency - lower is better
+                        9: 'max', // Throughput - higher is better
+                        3: 'max'  // Uptime % - higher is better
+                    };
+                    
+                    // For each configured column, find the best value among highlighted rows
+                    Object.entries(columnConfig).forEach(([colIndex, type]) => {
+                        const values = highlightedRows
+                            .map(row => {
+                                const cellText = row.cells[colIndex].textContent.trim();
+                                const value = cellText === '-' ? null : parseFloat(cellText);
+                                return { row, value, cell: row.cells[colIndex] };
+                            })
+                            .filter(item => item.value !== null && !isNaN(item.value));
+                        
+                        if (values.length === 0) return;
+                        
+                        // Find best value
+                        let bestValue;
+                        if (type === 'min') {
+                            bestValue = Math.min(...values.map(v => v.value));
+                        } else {
+                            bestValue = Math.max(...values.map(v => v.value));
+                        }
+                        
+                        // Mark cells with best value
+                        values.forEach(item => {
+                            if (item.value === bestValue) {
+                                item.cell.classList.add('best-value');
+                            }
+                        });
+                    });
+                }
+                
+                // Call markBestValues if model is highlighted
+                if (highlightModelId) {
+                    markBestValues();
+                }
+                
+                // Scroll to highlighted model if present
+                if (firstHighlightedRow) {
+                    setTimeout(() => {
+                        firstHighlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+                
+                // Filter functionality
+                document.getElementById('filterInput').addEventListener('input', function(e) {
+                    const filter = e.target.value.toLowerCase();
+                    const rows = tbody.getElementsByTagName('tr');
+                    
+                    for (let row of rows) {
+                        const modelText = row.cells[0].textContent.toLowerCase();
+                        const providerText = row.cells[1].textContent.toLowerCase();
+                        
+                        if (modelText.includes(filter) || providerText.includes(filter)) {
+                            row.classList.remove('hidden');
+                        } else {
+                            row.classList.add('hidden');
+                        }
+                    }
+                });
+                
+                // Sorting functionality
+                let sortColumn = -1;
+                let sortDirection = 'asc';
+                
+                const headers = document.querySelectorAll('th');
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        // Remove sort classes from all headers
+                        headers.forEach(h => {
+                            h.classList.remove('sort-asc', 'sort-desc');
+                        });
+                        
+                        // Determine sort direction
+                        if (sortColumn === index) {
+                            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            sortColumn = index;
+                            sortDirection = 'asc';
+                        }
+                        
+                        // Add sort class to current header
+                        header.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                        
+                        // Sort the table
+                        sortTable(index, sortDirection);
+                    });
+                });
+                
+                function sortTable(columnIndex, direction) {
+                    const rows = Array.from(tbody.getElementsByTagName('tr'));
+                    
+                    rows.sort((a, b) => {
+                        const aText = a.cells[columnIndex].textContent.trim();
+                        const bText = b.cells[columnIndex].textContent.trim();
+                        
+                        // Handle special cases
+                        if (aText === '-' && bText !== '-') return direction === 'asc' ? 1 : -1;
+                        if (aText !== '-' && bText === '-') return direction === 'asc' ? -1 : 1;
+                        if (aText === '-' && bText === '-') return 0;
+                        
+                        // Try to parse as number
+                        const aNum = parseFloat(aText);
+                        const bNum = parseFloat(bText);
+                        
+                        let comparison = 0;
+                        if (!isNaN(aNum) && !isNaN(bNum)) {
+                            comparison = aNum - bNum;
+                        } else {
+                            // Handle Yes/No specially
+                            if (aText === 'Yes' || aText === 'No') {
+                                comparison = aText === bText ? 0 : (aText === 'Yes' ? -1 : 1);
+                            } else {
+                                comparison = aText.localeCompare(bText);
+                            }
+                        }
+                        
+                        return direction === 'asc' ? comparison : -comparison;
+                    });
+                    
+                    // Clear tbody and re-append sorted rows
+                    tbody.innerHTML = '';
+                    rows.forEach((row, index) => {
+                        // Re-apply model-group-start class based on model changes
+                        if (index > 0 && rows[index].cells[0].textContent !== rows[index-1].cells[0].textContent) {
+                            row.classList.add('model-group-start');
+                        } else if (index > 0) {
+                            row.classList.remove('model-group-start');
+                        }
+                        tbody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading data:', error);
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="12">Error loading data</td></tr>';
+            });
+    </script>
+</body>
+</html>

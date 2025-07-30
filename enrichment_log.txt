@@ -1,0 +1,116 @@
+Fetching Hugging Face models...
+Found 91 Hugging Face models
+
+Fetching OpenRouter models...
+Found 319 OpenRouter models
+
+Building HuggingFace to OpenRouter ID mapping...
+Found mappings for 134 Hugging Face models
+
+Enriching Hugging Face models with per-provider pricing and capabilities...
+Processing 1/91: Qwen/Qwen3-Coder-480B-A35B-Instruct -> qwen/qwen3-coder
+Processing 2/91: zai-org/GLM-4.5 -> z-ai/glm-4.5
+Processing 3/91: Qwen/Qwen3-235B-A22B-Instruct-2507 -> qwen/qwen3-235b-a22b-2507
+Processing 4/91: moonshotai/Kimi-K2-Instruct -> moonshotai/kimi-k2
+Processing 5/91: Qwen/Qwen3-235B-A22B-Thinking-2507 -> qwen/qwen3-235b-a22b-thinking-2507
+Processing 6/91: Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8 - No OpenRouter mapping found
+Processing 7/91: HuggingFaceTB/SmolLM3-3B - No OpenRouter mapping found
+Processing 8/91: deepseek-ai/DeepSeek-R1 -> deepseek/deepseek-r1
+Processing 9/91: meta-llama/Llama-3.1-8B-Instruct - No OpenRouter mapping found
+Processing 10/91: zai-org/GLM-4.1V-9B-Thinking - No OpenRouter mapping found
+Processing 11/91: Qwen/Qwen3-235B-A22B -> qwen/qwen3-235b-a22b
+Processing 12/91: meta-llama/Llama-3.2-3B-Instruct -> meta-llama/llama-3.2-3b-instruct
+Processing 14/91: deepseek-ai/DeepSeek-R1-0528 -> deepseek/deepseek-r1-0528
+Processing 15/91: Qwen/Qwen3-32B -> qwen/qwen3-32b
+Processing 16/91: meta-llama/Meta-Llama-3-8B-Instruct -> meta-llama/llama-3-8b-instruct
+Processing 17/91: meta-llama/Llama-4-Scout-17B-16E-Instruct -> meta-llama/llama-4-scout
+Processing 19/91: Qwen/Qwen3-30B-A3B -> qwen/qwen3-30b-a3b
+Processing 20/91: Qwen/Qwen3-8B -> qwen/qwen3-8b
+Processing 21/91: Qwen/Qwen2.5-VL-7B-Instruct -> qwen/qwen-2.5-vl-7b-instruct
+Processing 23/91: meta-llama/Llama-3.3-70B-Instruct -> meta-llama/llama-3.3-70b-instruct
+Processing 24/91: Qwen/Qwen2.5-Coder-32B-Instruct -> qwen/qwen-2.5-coder-32b-instruct
+Processing 25/91: Qwen/Qwen3-14B -> qwen/qwen3-14b
+Processing 26/91: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B -> deepseek/deepseek-r1-distill-qwen-1.5b
+Processing 27/91: meta-llama/Llama-3.2-1B-Instruct -> meta-llama/llama-3.2-1b-instruct
+Processing 28/91: deepseek-ai/DeepSeek-V3-0324 -> deepseek/deepseek-chat-v3-0324
+Processing 29/91: Qwen/Qwen2.5-7B-Instruct -> qwen/qwen-2.5-7b-instruct
+Processing 32/91: meta-llama/Llama-4-Maverick-17B-128E-Instruct -> meta-llama/llama-4-maverick
+Processing 33/91: Qwen/Qwen2.5-72B-Instruct -> qwen/qwen-2.5-72b-instruct
+Processing 34/91: deepseek-ai/DeepSeek-V3 -> deepseek/deepseek-chat
+Processing 35/91: microsoft/phi-4 -> microsoft/phi-4
+Processing 38/91: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B -> deepseek/deepseek-r1-distill-qwen-14b
+Processing 39/91: google/gemma-2-9b-it -> google/gemma-2-9b-it
+Processing 43/91: meta-llama/Llama-3.2-11B-Vision-Instruct -> meta-llama/llama-3.2-11b-vision-instruct
+Processing 44/91: nvidia/Llama-3_3-Nemotron-Super-49B-v1 -> nvidia/llama-3.3-nemotron-super-49b-v1
+Processing 45/91: Qwen/QwQ-32B -> qwen/qwq-32b
+Processing 46/91: Qwen/Qwen2.5-VL-32B-Instruct -> qwen/qwen2.5-vl-32b-instruct
+Processing 47/91: Qwen/Qwen2.5-VL-72B-Instruct -> qwen/qwen2.5-vl-72b-instruct
+Processing 48/91: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B -> deepseek/deepseek-r1-distill-qwen-32b
+Processing 51/91: NousResearch/Hermes-3-Llama-3.1-405B -> nousresearch/hermes-3-llama-3.1-405b
+Processing 52/91: deepseek-ai/DeepSeek-R1-Distill-Llama-70B -> deepseek/deepseek-r1-distill-llama-70b
+Processing 53/91: nvidia/Llama-3_1-Nemotron-Ultra-253B-v1 -> nvidia/llama-3.1-nemotron-ultra-253b-v1
+Processing 54/91: Qwen/QwQ-32B-Preview -> qwen/qwq-32b-preview
+Processing 55/91: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B -> deepseek/deepseek-r1-distill-qwen-7b
+Processing 56/91: meta-llama/Llama-Guard-4-12B -> meta-llama/llama-guard-4-12b
+Processing 58/91: NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO -> nousresearch/nous-hermes-2-mixtral-8x7b-dpo
+Processing 61/91: nvidia/Llama-3.1-Nemotron-70B-Instruct-HF -> nvidia/llama-3.1-nemotron-70b-instruct
+Processing 68/91: Sao10K/L3-8B-Lunaris-v1 -> sao10k/l3-lunaris-8b
+Processing 73/91: deepseek-ai/DeepSeek-R1-Distill-Llama-8B -> deepseek/deepseek-r1-distill-llama-8b
+Processing 74/91: NousResearch/Hermes-2-Pro-Llama-3-8B -> nousresearch/hermes-2-pro-llama-3-8b
+Processing 82/91: Sao10K/L3-70B-Euryale-v2.1 -> sao10k/l3-euryale-70b
+Processing 83/91: NousResearch/Hermes-3-Llama-3.1-70B -> nousresearch/hermes-3-llama-3.1-70b
+Processing 86/91: deepseek-ai/DeepSeek-Prover-V2-671B -> deepseek/deepseek-prover-v2
+Processing 87/91: meta-llama/Meta-Llama-3-70B-Instruct -> meta-llama/llama-3-70b-instruct
+Processing 90/91: Qwen/Qwen2-72B-Instruct -> qwen/qwen-2-72b-instruct
+
+Enriched data saved to enriched_models_enhanced.json
+
+============================================================
+ENRICHMENT STATISTICS
+============================================================
+Total models processed: 91
+Models with OpenRouter mapping: 50
+Models enriched with pricing: 42
+Provider entries enriched: 103
+New capability fields added: 1680
+
+Endpoint Status Distribution:
+  degraded: 17
+  offline: 5
+  operational: 251
+
+Uptime Statistics (30-day):
+  Min: 14.72%
+  Max: 100.00%
+  Avg: 97.38%
+
+============================================================
+EXAMPLE ENRICHED ENTRIES
+============================================================
+
+Model: Qwen/Qwen3-Coder-480B-A35B-Instruct
+Provider: novita
+  Pricing: $0.95/M input, $5.0/M output
+  Status: operational (0)
+  Uptime (30d): 98.65%
+  Quantization: fp8
+  Context Length: 262,144
+  Capabilities: supports_frequency_penalty, supports_function_calling, supports_logit_bias, supports_max_tokens, supports_min_p, supports_presence_penalty, supports_repetition_penalty, supports_seed, supports_stop_sequences, supports_temperature, supports_tools, supports_top_k, supports_top_p
+
+Model: Qwen/Qwen3-235B-A22B-Instruct-2507
+Provider: novita
+  Pricing: $0.15/M input, $0.8/M output
+  Status: operational (0)
+  Uptime (30d): 97.93%
+  Quantization: fp8
+  Context Length: 262,144
+  Capabilities: supports_frequency_penalty, supports_function_calling, supports_logit_bias, supports_max_tokens, supports_min_p, supports_presence_penalty, supports_repetition_penalty, supports_seed, supports_stop_sequences, supports_temperature, supports_tools, supports_top_k, supports_top_p
+
+Model: moonshotai/Kimi-K2-Instruct
+Provider: fireworks-ai
+  Pricing: $0.6/M input, $2.5/M output
+  Status: degraded (-2)
+  Uptime (30d): 92.83%
+  Quantization: fp8
+  Context Length: 131,072
+  Capabilities: supports_frequency_penalty, supports_function_calling, supports_logit_bias, supports_logprobs, supports_max_tokens, supports_presence_penalty, supports_repetition_penalty, supports_response_format, supports_stop_sequences, supports_structured_output, supports_temperature, supports_tools, supports_top_k, supports_top_logprobs, supports_top_p
